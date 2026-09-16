@@ -37,7 +37,21 @@ function mainLoop(elapsed = 0){
     
     baseCircle.Update()
     movingCircle.Update()
+    radiusVector.Update()
     
+    /*
+    //movingCircle.dx += radiusVector.getVector().x / radiusVector.getDistance() * 0.5
+    movingCircle.dy += radiusVector.getVector().y / radiusVector.getDistance() *0.1
+    */
+    
+    // a = v^2/r ---> 1^2/200
+
+    movingCircle.dx += ( radiusVector.getVector().x / radiusVector.getDistance()) * (1/baseCircle.radius) // * acceleration
+    movingCircle.dy +=  ( radiusVector.getVector().y / radiusVector.getDistance()) * (1/baseCircle.radius) // * acceleration
+
+
+
+
     i++
     prevTime = elapsed 
     requestAnimationFrame(mainLoop)
