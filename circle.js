@@ -1,14 +1,14 @@
 class Cirlce{
 
-    constructor(xpos,ypos,radius,mass, vx, vy,color){
+    constructor(xpos,ypos,radius,mass, dx, dy,color){
         this.xpos = xpos
         this.ypos = ypos
         this.radius = radius
         this.mass = mass
         this.color = color
 
-        this.dx = vx
-        this.dy = vy
+        this.dx = dx
+        this.dy = dy
     }
 
     Draw(){
@@ -37,38 +37,32 @@ class Cirlce{
     }
     
 }
-class Vector{
 
-    constructor(){
-        this.x1 = baseCircle.xpos
-        this.x2 = movingCircle.xpos
-        this.y1 = baseCircle.ypos
-        this.y2 = movingCircle.ypos
+function getDistance(x1,y1,x2,y2){
+    return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2))
+}
 
-        
-    }
+function getVector(x1,y1,x2,y2){
+    return {x: x2-x1, y: y2-y1}
+}
 
-    getVector(){
-        return {x: this.x1 - this.x2, y: this.y1 - this.y2}
-    }
-    getDistance(){
-         return Math.sqrt( Math.pow(this.x1-this.x2,2) + Math.pow(this.y1-this.y2,2) )
-    }
+function setMovingCircleSpeed(speed){
+    const currentSpeed = Math.hypot(movingCircle.dx, movingCircle.dy)
 
-    Update(){
-        this.x1 = baseCircle.xpos
-        this.x2 = movingCircle.xpos
-        this.y1 = baseCircle.ypos
-        this.y2 = movingCircle.ypos
-    }
+    if(currentSpeed === 0) return
+
+    const speedRatio = speed / currentSpeed
+    movingCircle.dx *= speedRatio
+    movingCircle.dy *= speedRatio
 }
 
 
+let baseCircle = new Cirlce(-100,-100,200,5,0,0,"white")
 
-let baseCircle = new Cirlce(0,0,200,5,0,0,"white")
+let baseCircle2 = new Cirlce(500,200,100,5,0,0,"white")
 
-let movingCircle = new Cirlce(0+baseCircle.radius, 0, 30, 1, 0, -1,"red")
+let movingCircle = new Cirlce(baseCircle.radius-100, -100, 30, 1, 0, -1,"red")
 
+let movingCircle2 = new Cirlce(-200+baseCircle.radius, -100, 30, 1, 0, -2,"blue")
 
-let radiusVector = new Vector(baseCircle.xpos,movingCircle.xpos,baseCircle.ypos,movingCircle.ypos)
 
