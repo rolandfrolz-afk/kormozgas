@@ -20,6 +20,8 @@ let sum = 0
 let avg = 0
 let movingCircleSpeed = 1
 
+let isMouseDown = false; let mouseX = 0; let mouseY = 0;
+
 document.addEventListener("keydown", (event) => {
     if(event.key === "ArrowUp"){
         movingCircleSpeed += 0.1
@@ -32,6 +34,16 @@ document.addEventListener("keydown", (event) => {
     }
 }
 )
+
+document.addEventListener("mousedown", (event) => {
+    isMouseDown = true
+    mouseX_client = event.clientX
+    mouseY_client = event.clientY
+   
+})
+document.addEventListener("mouseup", (event) => {
+    isMouseDown = false
+})
 
 
 
@@ -49,7 +61,8 @@ function mainLoop(elapsed = 0){
     }
     stats.innerText = ``
     stats.innerText += `fps: ${avg.toFixed(1)}\n`
-    stats.innerText += `RedCircle speed: ${movingCircleSpeed.toFixed(1)}\n (ArrowUp/ArrowDown)`
+    stats.innerText += `RedCircle speed: ${movingCircleSpeed.toFixed(1)}\n (ArrowUp/ArrowDown)\n`
+    stats.innerText += `Spam click to push BlueCircle\n`
     
 
     
@@ -80,7 +93,23 @@ function mainLoop(elapsed = 0){
     movingCircle2.dy += ( getVector(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos).y / getDistance(baseCircle.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos)) * (4/200)
     + (getVector(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos).y / getDistance(baseCircle2.xpos,baseCircle2.ypos,movingCircle2.xpos,movingCircle2.ypos)) * (4/200)// * acceleration
     
+    if(isMouseDown){
 
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = mouseX_client - rect.left - canvas.width/4;
+        const mouseY = mouseY_client - rect.top - canvas.height/4;
+
+        movingCircle2.dx += ( getVector(movingCircle2.xpos,movingCircle2.ypos,mouseX,mouseY).x / getDistance(mouseX,mouseY,movingCircle2.xpos,movingCircle2.ypos) * 0.1)
+        movingCircle2.dy += ( getVector(movingCircle2.xpos,movingCircle2.ypos,mouseX,mouseY).y / getDistance(mouseX,mouseY,movingCircle2.xpos,movingCircle2.ypos) * 0.1)
+    }
+    drawLines(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos)
+    drawLines(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos)
+
+    
+    
+
+
+    
 
     i++
     prevTime = elapsed 
