@@ -66,6 +66,15 @@ function drawLines(x1,y1,x2,y2){
     ctx.closePath()
 }
 
+function drawOrbit(x,y,r,color){
+    ctx.beginPath()
+        ctx.arc(x,y,r,0,2*Math.PI)
+        ctx.strokeStyle = color
+        ctx.stroke()
+    ctx.closePath()
+}
+
+
 let baseCircle = new Cirlce(-100,-100,200,5,0,0,"white")
 
 let baseCircle2 = new Cirlce(500,200,100,5,0,0,"white")

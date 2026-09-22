@@ -20,6 +20,8 @@ let sum = 0
 let avg = 0
 let movingCircleSpeed = 1
 
+let savedPos = []
+
 let isMouseDown = false; let mouseX = 0; let mouseY = 0;
 
 document.addEventListener("keydown", (event) => {
@@ -51,6 +53,7 @@ function mainLoop(elapsed = 0){
     ctx.clearRect(-canvas.width,-canvas.height,canvas.width*2,canvas.height*2)
     const delta = (elapsed - prevTime)+ 1e-5
     
+
     deltaTimes.push(delta)
     if(i==60){
         
@@ -58,7 +61,14 @@ function mainLoop(elapsed = 0){
         for (const element of deltaTimes) {sum += element}
         avg = 1000/(sum/deltaTimes.length)
         deltaTimes = []
+       
     }
+    if(i % 10 == 0){ 
+        savedPos.push({x:movingCircle2.xpos, y: movingCircle2.ypos})
+    }
+
+
+
     stats.innerText = ``
     stats.innerText += `fps: ${avg.toFixed(1)}\n`
     stats.innerText += `RedCircle speed: ${movingCircleSpeed.toFixed(1)}\n (ArrowUp/ArrowDown)\n`
@@ -106,7 +116,10 @@ function mainLoop(elapsed = 0){
     drawLines(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos)
 
     
-    
+    for (const element of savedPos) {
+        
+        drawOrbit(element.x,element.y,2,movingCircle2.color)//drawing the path
+    }
 
 
     
@@ -115,4 +128,5 @@ function mainLoop(elapsed = 0){
     prevTime = elapsed 
     requestAnimationFrame(mainLoop)
 }
+
 mainLoop()
