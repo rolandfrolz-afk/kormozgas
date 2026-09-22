@@ -81,6 +81,14 @@ let baseCircle2 = new Cirlce(500,200,100,5,0,0,"white")
 
 let movingCircle = new Cirlce(baseCircle.radius-100, -100, 30, 1, 0, -1,"red")
 
-let movingCircle2 = new Cirlce(-200+baseCircle.radius, -100, 30, 1, 0, -2,"blue")
+let movingCircle2 = new Cirlce(baseCircle.radius, -100, 30, 1, 0, -2,"blue")
 
 
+let lotCircles = []
+
+for (let index = 0; index < 10; index++) {
+    let randomX = Math.floor(Math.random() * 500)
+    let randomY = Math.floor(Math.random() * 500)
+    lotCircles.push(new Cirlce(randomX,randomY,20,0,1,1,"green"))
+    
+}

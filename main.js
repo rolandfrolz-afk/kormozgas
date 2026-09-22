@@ -61,6 +61,8 @@ function mainLoop(elapsed = 0){
         for (const element of deltaTimes) {sum += element}
         avg = 1000/(sum/deltaTimes.length)
         deltaTimes = []
+
+        
        
     }
     if(i % 10 == 0){ 
@@ -82,7 +84,17 @@ function mainLoop(elapsed = 0){
     movingCircle.Update()
     movingCircle2.Update()  
   
-    
+    /*LOT CIRCLES*/ 
+    for (const element of lotCircles) {
+        element.Update()
+
+        element.dx += ( getVector(element.xpos,element.ypos,baseCircle.xpos,baseCircle.ypos).x / getDistance(baseCircle.xpos,baseCircle.ypos,element.xpos,element.ypos)) * (1/200) 
+        + (getVector(element.xpos,element.ypos,baseCircle2.xpos,baseCircle2.ypos).x / getDistance(baseCircle2.xpos,baseCircle2.ypos,element.xpos,element.ypos)) * (1/200)  // * acceleration
+
+        element.dy += ( getVector(element.xpos,element.ypos,baseCircle.xpos,baseCircle.ypos).y / getDistance(baseCircle.xpos,baseCircle.ypos,element.xpos,element.ypos)) * (1/100)
+        + (getVector(element.xpos,element.ypos,baseCircle2.xpos,baseCircle2.ypos).y / getDistance(baseCircle2.xpos,baseCircle2.ypos,element.xpos,element.ypos)) * (1/100)// * acceleration
+
+    }
 
     /*
     //movingCircle.dx += radiusVector.getVector().x / radiusVector.getDistance() * 0.5
@@ -96,13 +108,26 @@ function mainLoop(elapsed = 0){
     movingCircle.dy += ( getVector(movingCircle.xpos,movingCircle.ypos,baseCircle.xpos,baseCircle.ypos).y / getDistance(baseCircle.xpos,baseCircle.ypos,movingCircle.xpos,movingCircle.ypos)) * (movingCircleSpeed**2/baseCircle.radius) // * acceleration
     setMovingCircleSpeed(movingCircleSpeed)
    
-
+    
+    
+    //collision detection
+    if(getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos) <= baseCircle.radius + movingCircle2.radius){
+        movingCircle2.dx +=  getVector(baseCircle.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos).x / getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos) * 0.05
+        movingCircle2.dy +=  getVector(baseCircle.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos).y / getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos) * 0.05
+    }
+    if(getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos) <= baseCircle2.radius + movingCircle2.radius){
+        movingCircle2.dx += getVector(baseCircle2.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos).x / getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos) * 0.05
+        movingCircle2.dy += getVector(baseCircle2.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos).y / getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos) * 0.05
+    }
+    /*"Forces" to orbit around*/ 
     movingCircle2.dx += ( getVector(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos).x / getDistance(baseCircle.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos)) * (4/200) 
     + (getVector(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos).x / getDistance(baseCircle2.xpos,baseCircle2.ypos,movingCircle2.xpos,movingCircle2.ypos)) * (4/200)  // * acceleration
 
     movingCircle2.dy += ( getVector(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos).y / getDistance(baseCircle.xpos,baseCircle.ypos,movingCircle2.xpos,movingCircle2.ypos)) * (4/200)
     + (getVector(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos).y / getDistance(baseCircle2.xpos,baseCircle2.ypos,movingCircle2.xpos,movingCircle2.ypos)) * (4/200)// * acceleration
-    
+    //---------------------------------------------------------------------
+
+    //Mouse control
     if(isMouseDown){
 
         const rect = canvas.getBoundingClientRect();
@@ -112,15 +137,16 @@ function mainLoop(elapsed = 0){
         movingCircle2.dx += ( getVector(movingCircle2.xpos,movingCircle2.ypos,mouseX,mouseY).x / getDistance(mouseX,mouseY,movingCircle2.xpos,movingCircle2.ypos) * 0.1)
         movingCircle2.dy += ( getVector(movingCircle2.xpos,movingCircle2.ypos,mouseX,mouseY).y / getDistance(mouseX,mouseY,movingCircle2.xpos,movingCircle2.ypos) * 0.1)
     }
+    /*Drawing distance from the centers*/
     drawLines(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos)
     drawLines(movingCircle2.xpos,movingCircle2.ypos,baseCircle2.xpos,baseCircle2.ypos)
 
-    
+    //drawing the path
     for (const element of savedPos) {
-        
         drawOrbit(element.x,element.y,2,movingCircle2.color)//drawing the path
     }
-
+    if(i % 40 == 0){savedPos.shift()}
+    //------------------------------------------------
 
     
 
