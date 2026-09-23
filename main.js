@@ -75,6 +75,7 @@ function mainLoop(elapsed = 0){
     stats.innerText += `fps: ${avg.toFixed(1)}\n`
     stats.innerText += `RedCircle speed: ${movingCircleSpeed.toFixed(1)}\n (ArrowUp/ArrowDown)\n`
     stats.innerText += `Spam click to push BlueCircle\n`
+    stats.innerText += `Blue and Big circle distance: ${getDistance(movingCircle2.xpos,movingCircle2.ypos,baseCircle.xpos,baseCircle.ypos).toFixed(0)}`
     
 
     
@@ -89,13 +90,36 @@ function mainLoop(elapsed = 0){
         element.Update()
 
         element.dx += ( getVector(element.xpos,element.ypos,baseCircle.xpos,baseCircle.ypos).x / getDistance(baseCircle.xpos,baseCircle.ypos,element.xpos,element.ypos)) * (1/200) 
-        + (getVector(element.xpos,element.ypos,baseCircle2.xpos,baseCircle2.ypos).x / getDistance(baseCircle2.xpos,baseCircle2.ypos,element.xpos,element.ypos)) * (1/200)  // * acceleration
+        + (getVector(element.xpos,element.ypos,baseCircle2.xpos,baseCircle2.ypos).x / getDistance(baseCircle2.xpos,baseCircle2.ypos,element.xpos,element.ypos)) * (1/100)  // * acceleration
 
-        element.dy += ( getVector(element.xpos,element.ypos,baseCircle.xpos,baseCircle.ypos).y / getDistance(baseCircle.xpos,baseCircle.ypos,element.xpos,element.ypos)) * (1/100)
+        element.dy += ( getVector(element.xpos,element.ypos,baseCircle.xpos,baseCircle.ypos).y / getDistance(baseCircle.xpos,baseCircle.ypos,element.xpos,element.ypos)) * (1/200)
         + (getVector(element.xpos,element.ypos,baseCircle2.xpos,baseCircle2.ypos).y / getDistance(baseCircle2.xpos,baseCircle2.ypos,element.xpos,element.ypos)) * (1/100)// * acceleration
 
     }
+    /*collision with each other*/ 
 
+    for (let i = 0; i < lotCircles.length; i++) {
+        
+        for (let j = 0; j < lotCircles.length; j++) {
+            
+            if( getDistance(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos) < lotCircles[i].radius + lotCircles[j].radius && i!=j){
+                
+                lotCircles[i].dx += getVector(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos).x / getDistance(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos)
+                lotCircles[i].dy += getVector(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos).y / getDistance(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos)
+                
+                lotCircles[j].dx += -getVector(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos).x / getDistance(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos)
+                lotCircles[j].dy += -getVector(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos).y / getDistance(lotCircles[i].xpos,lotCircles[i].ypos,lotCircles[j].xpos,lotCircles[j].ypos)
+            }
+            
+        }
+        
+    }
+
+
+
+
+
+    //--------------------------
     /*
     //movingCircle.dx += radiusVector.getVector().x / radiusVector.getDistance() * 0.5
     movingCircle.dy += radiusVector.getVector().y / radiusVector.getDistance() *0.1
